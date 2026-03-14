@@ -18,35 +18,33 @@ public class FirstTest {
                 .body("size()", greaterThan(0));
     }
 
-    //Тест-кейс 2. Проверка полей первого поста
+    //Тест-кейс 2. Проверка, что у всех постов обязательные поля не пустые
     @Test
-    public void getFirstPostFieldsTest() {
-
-        RestAssured.given()
-                .baseUri("https://jsonplaceholder.typicode.com/")
-                .when()
-                .get("/posts")
-                .then()
-                .statusCode(200)
-                .body("[0].userId", notNullValue())
-                .body("[0].id", notNullValue())
-                .body("[0].title", notNullValue())
-                .body("[0].body", notNullValue());
-    }
-
-    //Тест-кейс 3. Проверка типа данных полей
-    @Test
-    public void getPostsFieldsTypeTest() {
-
+    public void allPostsRequiredFieldsNotNullTest() {
         RestAssured.given()
                 .baseUri("https://jsonplaceholder.typicode.com")
                 .when()
                 .get("/posts")
                 .then()
                 .statusCode(200)
-                .body("[0].userId", instanceOf(Integer.class))
-                .body("[0].id", instanceOf(Integer.class))
-                .body("[0].title", instanceOf(String.class))
-                .body("[0].body", instanceOf(String.class));
+                .body("userId", everyItem(notNullValue())) // каждый userId не null
+                .body("id", everyItem(notNullValue()))
+                .body("title", everyItem(notNullValue()))
+                .body("body", everyItem(notNullValue()));
+    }
+
+    //Тест-кейс 3. Проверка типов данных полей у конкретного поста
+    @Test
+    public void singlePostFieldsTypeTest() {
+        RestAssured.given()
+                .baseUri("https://jsonplaceholder.typicode.com")
+                .when()
+                .get("/posts/1")
+                .then()
+                .statusCode(200)
+                .body("userId", instanceOf(Integer.class))
+                .body("id", instanceOf(Integer.class))
+                .body("title", instanceOf(String.class)) // поле title — строка
+                .body("body", instanceOf(String.class));
     }
 }
