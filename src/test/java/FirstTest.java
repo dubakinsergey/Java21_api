@@ -21,6 +21,7 @@ public class FirstTest {
     //Тест-кейс 2. Проверка, что у всех постов обязательные поля не пустые
     @Test
     public void allPostsRequiredFieldsNotNullTest() {
+
         RestAssured.given()
                 .baseUri("https://jsonplaceholder.typicode.com")
                 .when()
@@ -36,6 +37,7 @@ public class FirstTest {
     //Тест-кейс 3. Проверка типов данных полей у конкретного поста
     @Test
     public void singlePostFieldsTypeTest() {
+
         RestAssured.given()
                 .baseUri("https://jsonplaceholder.typicode.com")
                 .when()
