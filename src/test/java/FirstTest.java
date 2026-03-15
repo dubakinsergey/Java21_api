@@ -1,5 +1,9 @@
 import io.restassured.RestAssured;
+import io.restassured.http.ContentType;
 import org.testng.annotations.Test;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import static org.hamcrest.Matchers.*;
 
@@ -85,5 +89,32 @@ public class FirstTest {
                 .then()
                 .statusCode(404)
                 .body(equalTo("{}"));
+    }
+
+    //Тест-кейс 7. Создание нового поста (POST)
+    @Test
+    public void createPostTest() {
+
+        String expectedTitle = "Хасл учит POST";
+        String expectedBody = "Теперь я умею создавать данные";
+        int expectedUserId = 1;
+
+        Map<String, Object> requestBody = new HashMap<>();
+        requestBody.put("title", "Хасл учит POST");
+        requestBody.put("body", "Теперь я умею создавать данные");
+        requestBody.put("userId", 1);
+
+        RestAssured.given()
+                .baseUri(URL)
+                .contentType(ContentType.JSON) // говорим серверу, что шлём JSON
+                .body(requestBody) // RestAssured сам превратит Map в JSON
+                .when()
+                .post("/posts")
+                .then()
+                .statusCode(201) // именно 201, а не 200
+                .body("id", notNullValue())
+                .body("title", equalTo(expectedTitle))
+                .body("body", equalTo(expectedBody))
+                .body("userId", equalTo(expectedUserId));
     }
 }
