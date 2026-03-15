@@ -100,9 +100,9 @@ public class FirstTest {
         int expectedUserId = 1;
 
         Map<String, Object> requestBody = new HashMap<>();
-        requestBody.put("title", "Хасл учит POST");
-        requestBody.put("body", "Теперь я умею создавать данные");
-        requestBody.put("userId", 1);
+        requestBody.put("title", expectedTitle);
+        requestBody.put("body", expectedBody);
+        requestBody.put("userId", expectedUserId);
 
         RestAssured.given()
                 .baseUri(URL)
@@ -143,5 +143,26 @@ public class FirstTest {
                 .body("title", equalTo(longTitle))
                 .body("body", equalTo(body))
                 .body("userId", equalTo(userId));
+    }
+
+    // Тест-кейс 8. POST — проверка Content-Type ответа
+    @Test
+    public void createPostCheckContentTypeTest() {
+
+        Map<String, Object> requestBody = new HashMap<>();
+        requestBody.put("title", "Проверка типа");
+        requestBody.put("body", "Проверяем, что ответ — JSON");
+        requestBody.put("userId", 1);
+
+        RestAssured.given()
+                .baseUri(URL)
+                .contentType(ContentType.JSON)
+                .body(requestBody)
+                .when()
+                .post("/posts")
+                .then()
+                .statusCode(201)
+                .contentType(ContentType.JSON) // проверяем заголовок ответа
+                .body("id", notNullValue());
     }
 }
