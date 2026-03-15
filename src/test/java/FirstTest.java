@@ -91,7 +91,7 @@ public class FirstTest {
                 .body(equalTo("{}"));
     }
 
-    //Тест-кейс 7. Создание нового поста (POST)
+    //Тест-кейс 6. Создание нового поста (POST)
     @Test
     public void createPostTest() {
 
@@ -116,5 +116,32 @@ public class FirstTest {
                 .body("title", equalTo(expectedTitle))
                 .body("body", equalTo(expectedBody))
                 .body("userId", equalTo(expectedUserId));
+    }
+
+    // Тест-кейс 7. POST — очень длинный заголовок
+    @Test
+    public void createPostWithLongTitleTest() {
+
+        String longTitle = "a".repeat(1000);
+        String body = "Нормальное тело";
+        int userId = 1;
+
+        Map<String, Object> requestBody = new HashMap<>();
+        requestBody.put("title", longTitle);
+        requestBody.put("body", body);
+        requestBody.put("userId", userId);
+
+        RestAssured.given()
+                .baseUri(URL)
+                .contentType(ContentType.JSON)
+                .body(requestBody)
+                .when()
+                .post("/posts")
+                .then()
+                .statusCode(201)
+                .body("id", notNullValue())
+                .body("title", equalTo(longTitle))
+                .body("body", equalTo(body))
+                .body("userId", equalTo(userId));
     }
 }
