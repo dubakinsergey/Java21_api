@@ -1,6 +1,6 @@
 package tests;
 
-import io.restassured.RestAssured;
+import client.TestClient;
 import io.restassured.http.ContentType;
 import org.testng.annotations.Test;
 
@@ -11,8 +11,6 @@ import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.notNullValue;
 
 public class PostTests {
-
-    String URL = "https://jsonplaceholder.typicode.com";
 
     /**
      * Тест-кейс 1. Создание нового поста (POST)
@@ -31,10 +29,8 @@ public class PostTests {
         requestBody.put("body", expectedBody);
         requestBody.put("userId", expectedUserId);
 
-        RestAssured.given()
-                .baseUri(URL)
-                .contentType(ContentType.JSON) // говорим серверу, что шлём JSON
-                .body(requestBody) // RestAssured сам превратит Map в JSON
+        TestClient.request()
+                .body(requestBody)
                 .when()
                 .post("/posts")
                 .then()
@@ -62,9 +58,7 @@ public class PostTests {
         requestBody.put("body", body);
         requestBody.put("userId", userId);
 
-        RestAssured.given()
-                .baseUri(URL)
-                .contentType(ContentType.JSON)
+        TestClient.request()
                 .body(requestBody)
                 .when()
                 .post("/posts")
@@ -89,9 +83,7 @@ public class PostTests {
         requestBody.put("body", "Проверяем, что ответ — JSON");
         requestBody.put("userId", 1);
 
-        RestAssured.given()
-                .baseUri(URL)
-                .contentType(ContentType.JSON)
+        TestClient.request()
                 .body(requestBody)
                 .when()
                 .post("/posts")
@@ -115,9 +107,7 @@ public class PostTests {
         requestBody.put("body", "Тело поста");
         requestBody.put("userId", 1);
 
-        RestAssured.given()
-                .baseUri(URL)
-                .contentType(ContentType.JSON)
+        TestClient.request()
                 .body(requestBody)
                 .when()
                 .post("/posts")
@@ -138,9 +128,7 @@ public class PostTests {
         requestBody.put("body", "Проверяем тип userId");
         requestBody.put("userId", "один"); // строка, а не число
 
-        RestAssured.given()
-                .baseUri(URL)
-                .contentType(ContentType.JSON)
+        TestClient.request()
                 .body(requestBody)
                 .when()
                 .post("/posts")
@@ -161,9 +149,7 @@ public class PostTests {
         // поле "body" не отправляем
         requestBody.put("userId", 1);
 
-        RestAssured.given()
-                .baseUri(URL)
-                .contentType(ContentType.JSON)
+        TestClient.request()
                 .body(requestBody)
                 .when()
                 .post("/posts")
@@ -186,9 +172,7 @@ public class PostTests {
         requestBody.put("userId", 1);
         requestBody.put("extraField", "этого поля быть не должно");
 
-        RestAssured.given()
-                .baseUri(URL)
-                .contentType(ContentType.JSON)
+        TestClient.request()
                 .body(requestBody)
                 .when()
                 .post("/posts")

@@ -1,11 +1,9 @@
 package tests;
 
-import io.restassured.RestAssured;
+import client.TestClient;
 import org.testng.annotations.Test;
 
 public class DeleteTests {
-
-    String URL = "https://jsonplaceholder.typicode.com";
 
     /**
      * Тест-кейс 1. DELETE — удаление поста
@@ -20,17 +18,13 @@ public class DeleteTests {
         int postId = 1;
 
         // Шаг 1: Удаляем пост
-        RestAssured.given()
-                .baseUri(URL)
-                .when()
+        TestClient.request()
                 .delete("/posts/" + postId)
                 .then()
                 .statusCode(200);  // или 204 — зависит от API
 
         // Шаг 2: Проверяем, что пост действительно удалён
-        RestAssured.given()
-                .baseUri(URL)
-                .when()
+        TestClient.request()
                 .get("/posts/" + postId)
                 .then()
                 .statusCode(404);
