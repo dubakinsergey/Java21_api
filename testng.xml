@@ -1,0 +1,28 @@
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+<suite name="API Tests">
+    <test name="GET Tests">
+        <classes>
+            <class name="tests.GetTests"/>
+        </classes>
+    </test>
+    <test name="POST Tests">
+        <classes>
+            <class name="tests.PostTests"/>
+        </classes>
+    </test>
+    <test name="PUT Tests">
+        <classes>
+            <class name="tests.PutTests"/>
+        </classes>
+    </test>
+    <test name="PATCH Tests">
+        <classes>
+            <class name="tests.PatchTests"/>
+        </classes>
+    </test>
+    <test name="DELETE Tests">
+        <classes>
+            <class name="tests.DeleteTests"/>
+        </classes>
+    </test>
+</suite>
