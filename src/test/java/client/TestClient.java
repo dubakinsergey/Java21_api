@@ -1,5 +1,6 @@
 package client;
 
+import config.TestConfig;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import io.restassured.specification.RequestSpecification;
@@ -11,9 +12,8 @@ public class TestClient {
     public static RequestSpecification request() {
 
         return RestAssured.given()
-                .baseUri(BASE_URL)
+                .baseUri(TestConfig.getBaseUrl())
                 .contentType(ContentType.JSON)
-                .when()
                 .log()
                 .ifValidationFails();
     }
