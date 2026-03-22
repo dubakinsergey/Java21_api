@@ -1,13 +1,11 @@
 package tests;
 
-import io.restassured.RestAssured;
+import client.TestClient;
 import org.testng.annotations.Test;
 
 import static org.hamcrest.Matchers.*;
 
 public class GetTests {
-
-    String URL = "https://jsonplaceholder.typicode.com";
 
     /**
      * Тест-кейс 1. Массив не пустой
@@ -17,9 +15,7 @@ public class GetTests {
     @Test
     public void getPostsArrayNotEmptyTest() {
 
-        RestAssured.given()
-                .baseUri(URL)
-                .when()
+        TestClient.request()
                 .get("/posts")
                 .then()
                 .statusCode(200)
@@ -34,9 +30,7 @@ public class GetTests {
     @Test
     public void allPostsRequiredFieldsNotNullTest() {
 
-        RestAssured.given()
-                .baseUri(URL)
-                .when()
+        TestClient.request()
                 .get("/posts")
                 .then()
                 .statusCode(200)
@@ -54,9 +48,7 @@ public class GetTests {
     @Test
     public void singlePostFieldsTypeTest() {
 
-        RestAssured.given()
-                .baseUri(URL)
-                .when()
+        TestClient.request()
                 .get("/posts/1")
                 .then()
                 .statusCode(200)
@@ -80,9 +72,7 @@ public class GetTests {
                 "expedita et cum\nreprehenderit molestiae ut ut quas totam\nnostrum " +
                 "rerum est autem sunt rem eveniet architecto";
 
-        RestAssured.given()
-                .baseUri(URL)
-                .when()
+        TestClient.request()
                 .get("/posts/1")
                 .then()
                 .statusCode(200)
@@ -100,9 +90,7 @@ public class GetTests {
     @Test
     public void getNonExistingPostTest() {
 
-        RestAssured.given()
-                .baseUri(URL)
-                .when()
+        TestClient.request()
                 .get("/posts/99999")
                 .then()
                 .statusCode(404)

@@ -1,7 +1,6 @@
 package tests;
 
-import io.restassured.RestAssured;
-import io.restassured.http.ContentType;
+import client.TestClient;
 import org.testng.annotations.Test;
 
 import java.util.HashMap;
@@ -10,8 +9,6 @@ import java.util.Map;
 import static org.hamcrest.Matchers.equalTo;
 
 public class PatchTests {
-
-    String URL = "https://jsonplaceholder.typicode.com";
 
     /**
      * Тест-кейс 1. PATCH — частичное обновление поста
@@ -32,9 +29,7 @@ public class PatchTests {
         Map<String, Object> requestBody = new HashMap<>();
         requestBody.put("title", "Поменяли только заголовок");
 
-        RestAssured.given()
-                .baseUri(URL)
-                .contentType(ContentType.JSON)
+        TestClient.request()
                 .body(requestBody)
                 .when()
                 .patch("/posts/" + postId)
