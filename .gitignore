@@ -109,3 +109,4 @@ api-tests-reqres.iml
 allure-results
 .DS_Store
 target/
+allure-report
