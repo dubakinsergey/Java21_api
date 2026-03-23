@@ -36,14 +36,12 @@ mvn clean test
 Генерация и открытие Allure-отчёта
 После выполнения тестов:
 
-# Сгенерировать отчёт
-allure generate target/allure-results --clean
-
-# Открыть отчёт в браузере
-allure open target/allure-results
-
-Альтернативный способ (открыть сразу):
+# Сгенерировать отчёт и открыть в браузере
 allure serve target/allure-results
+
+Альтернативный способ (сначала сгенерировать, потом открыть):
+allure generate target/allure-results --clean -o allure-report
+allure open allure-report
 
 🔧 Конфигурация
 Настройки проекта находятся в файле:
