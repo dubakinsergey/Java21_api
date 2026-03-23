@@ -1,17 +1,20 @@
 package tests;
 
 import client.TestClient;
+import io.qameta.allure.Description;
+import io.qameta.allure.Epic;
+import io.qameta.allure.Feature;
+import io.qameta.allure.Story;
 import org.testng.annotations.Test;
 
 import static org.hamcrest.Matchers.*;
 
+@Epic("API Тестирование")
+@Feature("GET запросы")
 public class GetTests {
 
-    /**
-     * Тест-кейс 1. Массив не пустой
-     * Что проверяем: API возвращает список постов (массив) и он не пустой.
-     * Статус 200 означает, что запрос выполнен успешно.
-     */
+    @Story("Получение списка постов")
+    @Description("Проверяет, что GET /posts возвращает непустой массив")
     @Test
     public void getPostsArrayNotEmptyTest() {
 
@@ -22,11 +25,8 @@ public class GetTests {
                 .body("size()", greaterThan(0));
     }
 
-    /**
-     * Тест-кейс 2. Проверка, что у всех постов обязательные поля не пустые
-     * Что проверяем: Каждый пост в массиве содержит поля userId, id, title, body,
-     * и они не равны null (даже если пустая строка — это не null).
-     */
+    @Story("Проверка структуры постов")
+    @Description("Проверяет, что у всех постов обязательные поля не null")
     @Test
     public void allPostsRequiredFieldsNotNullTest() {
 
@@ -40,11 +40,8 @@ public class GetTests {
                 .body("body", everyItem(notNullValue()));
     }
 
-    /**
-     * Тест-кейс 3. Проверка типов данных полей у конкретного поста
-     * Что проверяем: У поста с id=1 поля соответствуют ожидаемым типам:
-     * userId и id — числа (Integer), title и body — строки (String).
-     */
+    @Story("Проверка типов данных")
+    @Description("Проверяет, что userId и id — числа, title и body — строки")
     @Test
     public void singlePostFieldsTypeTest() {
 
@@ -58,11 +55,8 @@ public class GetTests {
                 .body("body", instanceOf(String.class));
     }
 
-    /**
-     * Тест-кейс 4. Проверка конкретного поста по ID
-     * Что проверяем: Пост с id=1 содержит ожидаемые значения всех полей.
-     * Сравниваем с эталонными данными из документации API.
-     */
+    @Story("Проверка конкретного поста")
+    @Description("Проверяет, что пост с id=1 содержит ожидаемые значения")
     @Test
     public void getSpecificPostTest() {
 
@@ -82,11 +76,8 @@ public class GetTests {
                 .body("body", equalTo(expectedBody));
     }
 
-    /**
-     * Тест-кейс 5. Проверка 404 на несуществующий пост
-     * Что проверяем: При запросе поста с несуществующим ID сервер возвращает 404 Not Found
-     * и пустое тело ответа.
-     */
+    @Story("Негативный сценарий")
+    @Description("Проверяет, что запрос несуществующего поста возвращает 404")
     @Test
     public void getNonExistingPostTest() {
 

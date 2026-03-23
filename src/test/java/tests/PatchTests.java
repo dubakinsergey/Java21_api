@@ -1,6 +1,10 @@
 package tests;
 
 import client.TestClient;
+import io.qameta.allure.Description;
+import io.qameta.allure.Epic;
+import io.qameta.allure.Feature;
+import io.qameta.allure.Story;
 import org.testng.annotations.Test;
 
 import java.util.HashMap;
@@ -8,14 +12,12 @@ import java.util.Map;
 
 import static org.hamcrest.Matchers.equalTo;
 
+@Epic("API Тестирование")
+@Feature("PATCH запросы")
 public class PatchTests {
 
-    /**
-     * Тест-кейс 1. PATCH — частичное обновление поста
-     * Что проверяем: PATCH обновляет только переданные поля,
-     * остальные остаются без изменений.
-     * Статус 200 — успешно.
-     */
+    @Story("Частичное обновление поста")
+    @Description("PATCH обновляет только переданные поля, остальные не меняются")
     @Test
     public void updatePostWithPatchTest() {
 

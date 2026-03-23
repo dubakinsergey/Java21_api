@@ -1,6 +1,10 @@
 package tests;
 
 import client.TestClient;
+import io.qameta.allure.Description;
+import io.qameta.allure.Epic;
+import io.qameta.allure.Feature;
+import io.qameta.allure.Story;
 import org.testng.annotations.Test;
 
 import java.util.HashMap;
@@ -8,14 +12,12 @@ import java.util.Map;
 
 import static org.hamcrest.Matchers.equalTo;
 
+@Epic("API Тестирование")
+@Feature("PUT запросы")
 public class PutTests {
 
-    /**
-     * Тест-кейс 1. PUT — полное обновление поста
-     * Что проверяем: PUT полностью заменяет существующий пост.
-     * Все поля должны обновиться, старые данные перезаписываются.
-     * Статус 200 — успешно.
-     */
+    @Story("Полное обновление поста")
+    @Description("PUT полностью заменяет существующий пост")
     @Test
     public void updatePostWithPutTest() {
 
