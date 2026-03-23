@@ -1,17 +1,18 @@
 package tests;
 
 import client.TestClient;
+import io.qameta.allure.Description;
+import io.qameta.allure.Epic;
+import io.qameta.allure.Feature;
+import io.qameta.allure.Story;
 import org.testng.annotations.Test;
 
+@Epic("API Тестирование")
+@Feature("DELETE запросы")
 public class DeleteTests {
 
-    /**
-     * Тест-кейс 1. DELETE — удаление поста
-     * Что проверяем:
-     * - При DELETE сервер удаляет ресурс
-     * - Статус 200 (или 204 — зависит от API)
-     * - После удаления GET на тот же ресурс возвращает 404
-     */
+    @Story("Удаление поста")
+    @Description("DELETE удаляет пост, после чего GET возвращает 404")
     @Test
     public void deletePostTest() {
 

@@ -1,6 +1,10 @@
 package tests;
 
 import client.TestClient;
+import io.qameta.allure.Description;
+import io.qameta.allure.Epic;
+import io.qameta.allure.Feature;
+import io.qameta.allure.Story;
 import io.restassured.http.ContentType;
 import org.testng.annotations.Test;
 
@@ -10,13 +14,12 @@ import java.util.Map;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.notNullValue;
 
+@Epic("API Тестирование")
+@Feature("POST запросы")
 public class PostTests {
 
-    /**
-     * Тест-кейс 1. Создание нового поста (POST)
-     * Что проверяем: При отправке корректных данных сервер создаёт пост,
-     * возвращает статус 201, присваивает id и эхо-возвращает отправленные поля.
-     */
+    @Story("Создание поста")
+    @Description("Позитивный тест: создание поста с валидными данными")
     @Test
     public void createPostTest() {
 
@@ -41,11 +44,8 @@ public class PostTests {
                 .body("userId", equalTo(expectedUserId));
     }
 
-    /**
-     * Тест-кейс 2. POST — очень длинный заголовок
-     * Что проверяем: Сервер корректно обрабатывает длинные строки (1000 символов)
-     * и не обрезает их, не падает с ошибкой 500.
-     */
+    @Story("Граничные значения")
+    @Description("Проверяет, что сервер корректно обрабатывает очень длинный заголовок")
     @Test
     public void createPostWithLongTitleTest() {
 
@@ -70,11 +70,8 @@ public class PostTests {
                 .body("userId", equalTo(userId));
     }
 
-    /**
-     * Тест-кейс 3. POST — проверка Content-Type ответа
-     * Что проверяем: Сервер возвращает данные именно в формате JSON,
-     * а не в XML, HTML или другом формате.
-     */
+    @Story("Проверка заголовков")
+    @Description("Проверяет, что ответ приходит в формате JSON")
     @Test
     public void createPostCheckContentTypeTest() {
 
@@ -93,12 +90,8 @@ public class PostTests {
                 .body("id", notNullValue());
     }
 
-    /**
-     * Тест-кейс 4. POST — пустой заголовок
-     * Что проверяем: Сервер должен отклонять создание поста с пустым title
-     * (статус 400 Bad Request), так как это обязательное поле.
-     * Если API пропускает — это баг.
-     */
+    @Story("Негативные сценарии")
+    @Description("Сервер должен отклонять создание поста с пустым заголовком")
     @Test
     public void createPostWithEmptyTitleTest() {
 
@@ -115,11 +108,8 @@ public class PostTests {
                 .statusCode(400); // ожидаем Bad Request
     }
 
-    /**
-     * Тест-кейс 5. POST — userId передан строкой
-     * Что проверяем: Сервер должен проверять типы данных.
-     * Если API ожидает число (userId), то передача строки должна вызывать ошибку 400.
-     */
+    @Story("Негативные сценарии")
+    @Description("Сервер должен проверять типы данных — userId должен быть числом")
     @Test
     public void createPostWithUserIdAsStringTest() {
 
@@ -136,11 +126,8 @@ public class PostTests {
                 .statusCode(400);
     }
 
-    /**
-     * Тест-кейс 6. POST — отсутствует обязательное поле body
-     * Что проверяем: Если не отправить обязательное поле (body),
-     * сервер должен вернуть ошибку 400 Bad Request.
-     */
+    @Story("Негативные сценарии")
+    @Description("Сервер должен отклонять запрос без обязательного поля body")
     @Test
     public void createPostWithoutBodyTest() {
 
@@ -157,12 +144,8 @@ public class PostTests {
                 .statusCode(400); // Bad Request
     }
 
-    /**
-     * Тест-кейс 7. POST — отправка лишнего поля
-     * Что проверяем: Как сервер реагирует на лишние поля.
-     * В идеале — 400 Bad Request (отклоняет мусор),
-     * но некоторые API игнорируют и отдают 201.
-     */
+    @Story("Негативные сценарии")
+    @Description("Проверяет, как сервер реагирует на лишние поля в запросе")
     @Test
     public void createPostWithExtraFieldTest() {
 

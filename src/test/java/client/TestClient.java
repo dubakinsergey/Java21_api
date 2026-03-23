@@ -7,8 +7,6 @@ import io.restassured.specification.RequestSpecification;
 
 public class TestClient {
 
-    private static final String BASE_URL = "https://jsonplaceholder.typicode.com";
-
     public static RequestSpecification request() {
 
         return RestAssured.given()

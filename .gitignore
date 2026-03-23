@@ -23,6 +23,9 @@ out/
 .idea_modules/
 atlassian-ide-plugin.xml
 
+allure-results/
+allure-report/
+
 # VS Code
 .settings/
 .vscode/
