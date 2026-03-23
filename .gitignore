@@ -16,6 +16,8 @@ buildNumber.properties
 
 # IntelliJ IDEA
 .idea/
+/.idea
+.idea
 *.iml
 *.iws
 *.ipr
@@ -25,6 +27,7 @@ atlassian-ide-plugin.xml
 
 allure-results/
 allure-report/
+.allure
 
 # VS Code
 .settings/
@@ -56,6 +59,7 @@ logs/
 # Allure
 allure-results/
 allure-report/
+.allure
 
 # History
 .history/
