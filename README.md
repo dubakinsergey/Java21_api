@@ -33,12 +33,16 @@ src/test/java/
 ```bash
 mvn clean test
 
-Генерация Allure-отчёта
-mvn allure:report
-allure serve target/allure-results
+Генерация и открытие Allure-отчёта
+После выполнения тестов:
 
-📊 Allure отчёт
-После запуска тестов отчёт доступен в браузере:
+# Сгенерировать отчёт
+allure generate target/allure-results --clean
+
+# Открыть отчёт в браузере
+allure open target/allure-results
+
+Альтернативный способ (открыть сразу):
 allure serve target/allure-results
 
 🔧 Конфигурация
@@ -55,6 +59,7 @@ RestAssured	5.5.0	HTTP-клиент для API
 TestNG	7.10.2	Фреймворк для тестирования
 Owner	1.0.12	Управление конфигами
 Allure	2.29.0	Генерация отчётов
+
 🧪 Что покрыто тестами
 GET /posts — чтение списка и конкретных постов, проверка структуры, типов данных, негативные сценарии (404)
 
