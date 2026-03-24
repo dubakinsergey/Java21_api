@@ -6,12 +6,14 @@ import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.Story;
 import io.restassured.http.ContentType;
+import models.Post;
+import models.PostRequest;
 import org.testng.annotations.Test;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import static org.hamcrest.Matchers.equalTo;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.notNullValue;
 
 @Epic("API Тестирование")
@@ -23,25 +25,32 @@ public class PostTests {
     @Test
     public void createPostTest() {
 
-        String expectedTitle = "Хасл учит POST";
-        String expectedBody = "Теперь я умею создавать данные";
-        int expectedUserId = 1;
+        PostRequest request = new PostRequest("Хасл учит POST", "Теперь я умею создавать данные", 1);
 
-        Map<String, Object> requestBody = new HashMap<>();
-        requestBody.put("title", expectedTitle);
-        requestBody.put("body", expectedBody);
-        requestBody.put("userId", expectedUserId);
-
-        TestClient.request()
-                .body(requestBody)
+        Post response = TestClient.request()
+                .body(request)
                 .when()
                 .post("/posts")
                 .then()
                 .statusCode(201) // именно 201, а не 200
-                .body("id", notNullValue())
-                .body("title", equalTo(expectedTitle))
-                .body("body", equalTo(expectedBody))
-                .body("userId", equalTo(expectedUserId));
+                .extract()
+                .as(Post.class);
+
+        assertThat(response.getId())
+                .as("id должен быть присвоен")
+                .isNotNull();
+
+        assertThat(response.getTitle())
+                .as("title должен совпадать с отправленным")
+                .isEqualTo(request.getTitle());
+
+        assertThat(response.getBody())
+                .as("body должен совпадать с отправленным")
+                .isEqualTo(request.getBody());
+
+        assertThat(response.getUserId())
+                .as("userId должен совпадать с отправленным")
+                .isEqualTo(request.getUserId());
     }
 
     @Story("Граничные значения")
@@ -50,24 +59,32 @@ public class PostTests {
     public void createPostWithLongTitleTest() {
 
         String longTitle = "a".repeat(1000);
-        String body = "Нормальное тело";
-        int userId = 1;
+        PostRequest request = new PostRequest(longTitle, "Нормальное тело", 1);
 
-        Map<String, Object> requestBody = new HashMap<>();
-        requestBody.put("title", longTitle);
-        requestBody.put("body", body);
-        requestBody.put("userId", userId);
-
-        TestClient.request()
-                .body(requestBody)
+        Post response = TestClient.request()
+                .body(request)
                 .when()
                 .post("/posts")
                 .then()
                 .statusCode(201)
-                .body("id", notNullValue())
-                .body("title", equalTo(longTitle))
-                .body("body", equalTo(body))
-                .body("userId", equalTo(userId));
+                .extract()
+                .as(Post.class);
+
+        assertThat(response.getId())
+                .as("id должен быть присвоен")
+                .isNotNull();
+
+        assertThat(response.getTitle())
+                .as("title должен совпадать с отправленным")
+                .isEqualTo(longTitle);
+
+        assertThat(response.getBody())
+                .as("body должен совпадать с отправленным")
+                .isEqualTo("Нормальное тело");
+
+        assertThat(response.getUserId())
+                .as("userId должен совпадать с отправленным")
+                .isEqualTo(1);
     }
 
     @Story("Проверка заголовков")
