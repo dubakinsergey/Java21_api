@@ -2,10 +2,7 @@ package models;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public class Post {
-
-    @JsonProperty("id")
-    private int id;
+public class PostRequest {
 
     @JsonProperty("title")
     private String title;
@@ -16,24 +13,13 @@ public class Post {
     @JsonProperty("userId")
     private int userId;
 
-    // ПУСТОЙ КОНСТРУКТОР (нужен для Jackson)
-    public Post() {
+    public PostRequest() {
     }
 
-    // Конструктор с параметрами
-    public Post(int id, String title, String body, int userId) {
-        this.id = id;
+    public PostRequest(String title, String body, int userId) {
         this.title = title;
         this.body = body;
         this.userId = userId;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public int getId() {
-        return id;
     }
 
     public void setTitle(String title) {
@@ -63,9 +49,8 @@ public class Post {
     @Override
     public String toString() {
         return
-                "Post{" +
-                        "id = '" + id + '\'' +
-                        ",title = '" + title + '\'' +
+                "PostRequest{" +
+                        "title = '" + title + '\'' +
                         ",body = '" + body + '\'' +
                         ",userId = '" + userId + '\'' +
                         "}";
