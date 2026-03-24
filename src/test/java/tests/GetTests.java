@@ -5,8 +5,10 @@ import io.qameta.allure.Description;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.Story;
+import models.Post;
 import org.testng.annotations.Test;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.*;
 
 @Epic("API Тестирование")
@@ -66,14 +68,28 @@ public class GetTests {
                 "expedita et cum\nreprehenderit molestiae ut ut quas totam\nnostrum " +
                 "rerum est autem sunt rem eveniet architecto";
 
-        TestClient.request()
+        Post post = TestClient.request()
                 .get("/posts/1")
                 .then()
                 .statusCode(200)
-                .body("userId", equalTo(1))
-                .body("id", equalTo(1))
-                .body("title", equalTo(expectedTitle))
-                .body("body", equalTo(expectedBody));
+                .extract()
+                .as(Post.class);
+
+        assertThat(post.getUserId())
+                .as("'userId' не равен 1")
+                .isEqualTo(1);
+
+        assertThat(post.getId())
+                .as("'id' не равен 1")
+                .isEqualTo(1);
+
+        assertThat(post.getTitle())
+                .as("'title' не равен expectedTitle")
+                .isEqualTo(expectedTitle);
+
+        assertThat(post.getBody())
+                .as("'body' не равен expectedBody")
+                .contains(expectedBody);
     }
 
     @Story("Негативный сценарий")
