@@ -8,23 +8,30 @@ import io.qameta.allure.Story;
 import models.Post;
 import org.testng.annotations.Test;
 
+import java.util.List;
+
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.hamcrest.Matchers.*;
+import static org.hamcrest.Matchers.equalTo;
 
 @Epic("API Тестирование")
 @Feature("GET запросы")
 public class GetTests {
 
+    @Test
     @Story("Получение списка постов")
     @Description("Проверяет, что GET /posts возвращает непустой массив")
-    @Test
     public void getPostsArrayNotEmptyTest() {
 
-        TestClient.request()
+        List<Post> posts = TestClient.request()
                 .get("/posts")
                 .then()
                 .statusCode(200)
-                .body("size()", greaterThan(0));
+                .extract()
+                .jsonPath().getList(".", Post.class);
+
+        assertThat(posts)
+                .as("Список постов не должен быть пустым")
+                .isNotEmpty();
     }
 
     @Story("Проверка структуры постов")
@@ -32,14 +39,27 @@ public class GetTests {
     @Test
     public void allPostsRequiredFieldsNotNullTest() {
 
-        TestClient.request()
+        List<Post> posts = TestClient.request()
                 .get("/posts")
                 .then()
                 .statusCode(200)
-                .body("userId", everyItem(notNullValue())) // каждый userId не null
-                .body("id", everyItem(notNullValue()))
-                .body("title", everyItem(notNullValue()))
-                .body("body", everyItem(notNullValue()));
+                .extract().jsonPath().getList(".", Post.class);
+
+        assertThat(posts)
+                .as("У всех постов должен быть userId")
+                .allMatch(post -> post.getUserId() != 0);
+
+        assertThat(posts)
+                .as("У всех постов должен быть id")
+                .allMatch(post -> post.getId() != 0);
+
+        assertThat(posts)
+                .as("У всех постов должен быть title")
+                .allMatch(post -> post.getTitle() != null);
+
+        assertThat(posts)
+                .as("У всех постов должен быть body")
+                .allMatch(post -> post.getBody() != null);
     }
 
     @Story("Проверка типов данных")
@@ -47,14 +67,28 @@ public class GetTests {
     @Test
     public void singlePostFieldsTypeTest() {
 
-        TestClient.request()
+        Post post = TestClient.request()
                 .get("/posts/1")
                 .then()
                 .statusCode(200)
-                .body("userId", instanceOf(Integer.class))
-                .body("id", instanceOf(Integer.class))
-                .body("title", instanceOf(String.class)) // поле title — строка
-                .body("body", instanceOf(String.class));
+                .extract()
+                .as(Post.class);
+
+        assertThat(post.getUserId())
+                .as("userId должен быть Integer")
+                .isInstanceOf(Integer.class);
+
+        assertThat(post.getId())
+                .as("id должен быть Integer")
+                .isInstanceOf(Integer.class);
+
+        assertThat(post.getTitle())
+                .as("title должен быть String")
+                .isInstanceOf(String.class);
+
+        assertThat(post.getBody())
+                .as("body должен быть String")
+                .isInstanceOf(String.class);
     }
 
     @Story("Проверка конкретного поста")
@@ -76,19 +110,19 @@ public class GetTests {
                 .as(Post.class);
 
         assertThat(post.getUserId())
-                .as("'userId' не равен 1")
+                .as("userId не равен 1")
                 .isEqualTo(1);
 
         assertThat(post.getId())
-                .as("'id' не равен 1")
+                .as("id не равен 1")
                 .isEqualTo(1);
 
         assertThat(post.getTitle())
-                .as("'title' не равен expectedTitle")
+                .as("title не равен expectedTitle")
                 .isEqualTo(expectedTitle);
 
         assertThat(post.getBody())
-                .as("'body' не равен expectedBody")
+                .as("body не равен expectedBody")
                 .contains(expectedBody);
     }
 
