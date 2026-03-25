@@ -5,12 +5,11 @@ import io.qameta.allure.Description;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.Story;
+import models.Post;
+import models.PutRequest;
 import org.testng.annotations.Test;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import static org.hamcrest.Matchers.equalTo;
+import static org.assertj.core.api.Assertions.assertThat;
 
 @Epic("API Тестирование")
 @Feature("PUT запросы")
@@ -22,23 +21,31 @@ public class PutTests {
     public void updatePostWithPutTest() {
 
         int postId = 1;
+        PutRequest request = new PutRequest(postId, "Обновлённый заголовок", "Обновлённое тело поста", 777);
 
-        // В PUT обязательно передаём ВСЕ поля
-        Map<String, Object> requestBody = new HashMap<>();
-        requestBody.put("id", postId);
-        requestBody.put("title", "Обновлённый заголовок");
-        requestBody.put("body", "Обновлённое тело поста");
-        requestBody.put("userId", 777);
-
-        TestClient.request()
-                .body(requestBody)
+        Post response = TestClient.request()
+                .body(request)
                 .when()
                 .put("/posts/" + postId)
                 .then()
                 .statusCode(200)
-                .body("id", equalTo(postId))
-                .body("title", equalTo("Обновлённый заголовок"))
-                .body("body", equalTo("Обновлённое тело поста"))
-                .body("userId", equalTo(777));
+                .extract()
+                .as(Post.class);
+
+        assertThat(response.getId())
+                .as("id должен быть %d", postId)
+                .isEqualTo(postId);
+
+        assertThat(response.getTitle())
+                .as("title должен совпадать с отправленным")
+                .isEqualTo(request.getTitle());
+
+        assertThat(response.getBody())
+                .as("body должен совпадать с отправленным")
+                .isEqualTo(request.getBody());
+
+        assertThat(response.getUserId())
+                .as("userId должен совпадать с отправленным")
+                .isEqualTo(request.getUserId());
     }
 }
