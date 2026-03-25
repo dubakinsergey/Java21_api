@@ -18,16 +18,11 @@ public class DeleteTests {
 
         int postId = 1;
 
-        // Шаг 1: Удаляем пост
+        // JSONPlaceholder эмулирует удаление, возвращая 200
         TestClient.request()
+                .when()
                 .delete("/posts/" + postId)
                 .then()
-                .statusCode(200);  // или 204 — зависит от API
-
-        // Шаг 2: Проверяем, что пост действительно удалён
-        TestClient.request()
-                .get("/posts/" + postId)
-                .then()
-                .statusCode(404);
+                .statusCode(200);  // В реальном API было бы 204 No Content
     }
 }
