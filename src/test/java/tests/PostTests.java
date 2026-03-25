@@ -14,7 +14,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.hamcrest.Matchers.notNullValue;
 
 @Epic("API Тестирование")
 @Feature("POST запросы")
@@ -92,19 +91,21 @@ public class PostTests {
     @Test
     public void createPostCheckContentTypeTest() {
 
-        Map<String, Object> requestBody = new HashMap<>();
-        requestBody.put("title", "Проверка типа");
-        requestBody.put("body", "Проверяем, что ответ — JSON");
-        requestBody.put("userId", 1);
+        PostRequest request = new PostRequest("Проверка типа", "Проверяем, что ответ — JSON", 1);
 
-        TestClient.request()
-                .body(requestBody)
+        Post response = TestClient.request()
+                .body(request)
                 .when()
                 .post("/posts")
                 .then()
                 .statusCode(201)
                 .contentType(ContentType.JSON) // проверяем заголовок ответа
-                .body("id", notNullValue());
+                .extract()
+                .as(Post.class);
+
+        assertThat(response.getId())
+                .as("id должен быть присвоен")
+                .isNotNull();
     }
 
     @Story("Негативные сценарии")
@@ -112,17 +113,16 @@ public class PostTests {
     @Test
     public void createPostWithEmptyTitleTest() {
 
-        Map<String, Object> requestBody = new HashMap<>();
-        requestBody.put("title", ""); // пустая строка
-        requestBody.put("body", "Тело поста");
-        requestBody.put("userId", 1);
+        PostRequest request = new PostRequest("", "Тело поста", 1);
 
+        // JSONPlaceholder не валидирует, поэтому ожидаем 201
+        // В реальном API было бы 400
         TestClient.request()
-                .body(requestBody)
+                .body(request)
                 .when()
                 .post("/posts")
                 .then()
-                .statusCode(400); // ожидаем Bad Request
+                .statusCode(201);  // JSONPlaceholder создаёт даже с пустым title
     }
 
     @Story("Негативные сценарии")
@@ -130,17 +130,20 @@ public class PostTests {
     @Test
     public void createPostWithUserIdAsStringTest() {
 
+        // Для передачи строки в userId используем Map, так как в POJO поле int
         Map<String, Object> requestBody = new HashMap<>();
         requestBody.put("title", "Хасл");
         requestBody.put("body", "Проверяем тип userId");
-        requestBody.put("userId", "один"); // строка, а не число
+        requestBody.put("userId", "один");
 
+        // JSONPlaceholder не валидирует типы, поэтому ожидаем 201
+        // В реальном API было бы 400
         TestClient.request()
                 .body(requestBody)
                 .when()
                 .post("/posts")
                 .then()
-                .statusCode(400);
+                .statusCode(201);  // JSONPlaceholder игнорирует тип
     }
 
     @Story("Негативные сценарии")
@@ -148,17 +151,15 @@ public class PostTests {
     @Test
     public void createPostWithoutBodyTest() {
 
-        Map<String, Object> requestBody = new HashMap<>();
-        requestBody.put("title", "Нет тела");
-        // поле "body" не отправляем
-        requestBody.put("userId", 1);
+        // Создаём запрос без body (null)
+        PostRequest request = new PostRequest("Нет тела", null, 1);
 
         TestClient.request()
-                .body(requestBody)
+                .body(request)
                 .when()
                 .post("/posts")
                 .then()
-                .statusCode(400); // Bad Request
+                .statusCode(201);  // JSONPlaceholder создаёт даже без body
     }
 
     @Story("Негативные сценарии")
@@ -166,6 +167,7 @@ public class PostTests {
     @Test
     public void createPostWithExtraFieldTest() {
 
+        // Для лишнего поля используем Map
         Map<String, Object> requestBody = new HashMap<>();
         requestBody.put("title", "Лишнее поле");
         requestBody.put("body", "Тело поста");
@@ -177,6 +179,6 @@ public class PostTests {
                 .when()
                 .post("/posts")
                 .then()
-                .statusCode(400); // либо 201 — зависит от API
+                .statusCode(201);  // JSONPlaceholder игнорирует лишние поля
     }
 }
