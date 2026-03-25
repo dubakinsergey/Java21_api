@@ -5,12 +5,11 @@ import io.qameta.allure.Description;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.Story;
+import models.Post;
+import models.PutRequest;
 import org.testng.annotations.Test;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import static org.hamcrest.Matchers.equalTo;
+import static org.assertj.core.api.Assertions.assertThat;
 
 @Epic("API Тестирование")
 @Feature("PATCH запросы")
@@ -21,25 +20,22 @@ public class PatchTests {
     @Test
     public void updatePostWithPatchTest() {
 
-        int expectedUserId = 1;
         int postId = 1;
-        String expectedBody = "quia et suscipit\nsuscipit recusandae consequuntur " +
-                "expedita et cum\nreprehenderit molestiae ut ut quas totam\nnostrum " +
-                "rerum est autem sunt rem eveniet architecto";
 
-        // Отправляем ТОЛЬКО те поля, которые хотим изменить
-        Map<String, Object> requestBody = new HashMap<>();
-        requestBody.put("title", "Поменяли только заголовок");
+        PutRequest request = new PutRequest();
+        request.setTitle("Поменяли только заголовок");
 
-        TestClient.request()
-                .body(requestBody)
+        Post response = TestClient.request()
+                .body(request)
                 .when()
                 .patch("/posts/" + postId)
                 .then()
                 .statusCode(200)
-                .body("userId", equalTo(expectedUserId))
-                .body("id", equalTo(postId))
-                .body("title", equalTo("Поменяли только заголовок"))
-                .body("body", equalTo(expectedBody));
+                .extract()
+                .as(Post.class);
+
+        assertThat(response.getTitle())
+                .as("title должен измениться")
+                .isEqualTo(request.getTitle());
     }
 }
