@@ -2,6 +2,7 @@ package tests_DataProvider;
 
 import client.TestClient;
 import data.PostDataProvider;
+import io.qameta.allure.Allure;
 import io.qameta.allure.Description;
 import io.qameta.allure.Story;
 import models.Post;
@@ -19,7 +20,7 @@ public class PostTestsWithDataProvider {
     @Description("Проверяет создание поста с валидными данными")
     public void createPostHappyPathTest(String title, String body, int userId, String description) {
 
-        io.qameta.allure.Allure.addAttachment("Сценарий", description);
+        Allure.addAttachment("Сценарий", description);
 
         PostRequest request = new PostRequest(title, body, userId);
 
@@ -56,7 +57,7 @@ public class PostTestsWithDataProvider {
     @Description("Проверяет граничные значения (пустые строки, null, длинные строки)")
     public void createPostBoundaryTest(String title, String body, int userId, String description, int expectedStatus) {
 
-        io.qameta.allure.Allure.addAttachment("Граничный сценарий", description);
+        Allure.addAttachment("Граничный сценарий", description);
 
         PostRequest request = new PostRequest(title, body, userId);
 
@@ -93,7 +94,7 @@ public class PostTestsWithDataProvider {
     @Description("Проверяет, что сервер отклоняет некорректные запросы")
     public void createPostNegativeTest(String title, String body, int userId, String description, int expectedStatus) {
 
-        io.qameta.allure.Allure.addAttachment("Негативный сценарий", description);
+        Allure.addAttachment("Негативный сценарий", description);
 
         PostRequest request = new PostRequest(title, body, userId);
 
