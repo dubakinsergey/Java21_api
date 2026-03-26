@@ -60,41 +60,30 @@ public class PostTestsWithDataProvider {
 
         PostRequest request = new PostRequest(title, body, userId);
 
-        // Если ожидаем успешный статус — проверяем тело ответа
-        if (expectedStatus == 201) {
-            Post response = TestClient.request()
-                    .body(request)
-                    .when()
-                    .post("/posts")
-                    .then()
-                    .statusCode(expectedStatus)
-                    .extract()
-                    .as(Post.class);
+        Post response = TestClient.request()
+                .body(request)
+                .when()
+                .post("/posts")
+                .then()
+                .statusCode(expectedStatus)
+                .extract()
+                .as(Post.class);
 
-            assertThat(response.getId())
-                    .as("id должен быть присвоен для сценария: " + description)
-                    .isNotNull();
+        assertThat(response.getId())
+                .as("id должен быть присвоен для сценария: " + description)
+                .isNotNull();
 
-            assertThat(response.getTitle())
-                    .as("title должен совпадать для сценария: " + description)
-                    .isEqualTo(title == null ? null : title);
+        assertThat(response.getTitle())
+                .as("title должен совпадать для сценария: " + description)
+                .isEqualTo(title == null ? null : title);
 
-            assertThat(response.getBody())
-                    .as("body должен совпадать для сценария: " + description)
-                    .isEqualTo(body == null ? null : body);
+        assertThat(response.getBody())
+                .as("body должен совпадать для сценария: " + description)
+                .isEqualTo(body == null ? null : body);
 
-            assertThat(response.getUserId())
-                    .as("userId должен совпадать для сценария: " + description)
-                    .isEqualTo(userId);
-        } else {
-            // Если ожидаем ошибку — только проверяем статус
-            TestClient.request()
-                    .body(request)
-                    .when()
-                    .post("/posts")
-                    .then()
-                    .statusCode(expectedStatus);
-        }
+        assertThat(response.getUserId())
+                .as("userId должен совпадать для сценария: " + description)
+                .isEqualTo(userId);
     }
 
     // ==================== NEGATIVE ====================
