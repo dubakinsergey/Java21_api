@@ -1,5 +1,7 @@
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
-<suite name="API Tests">
+<suite name="API Tests" parallel="tests" thread-count="5">
+
+    <!-- ==================== СТАРЫЕ ТЕСТЫ (для совместимости) ==================== -->
     <test name="GET Tests">
         <classes>
             <class name="tests.GetTests"/>
@@ -23,6 +25,18 @@
     <test name="DELETE Tests">
         <classes>
             <class name="tests.DeleteTests"/>
+        </classes>
+    </test>
+
+    <!-- ==================== НОВЫЕ ПАРАМЕТРИЗОВАННЫЕ ТЕСТЫ ==================== -->
+    <test name="GET Tests with DataProvider">
+        <classes>
+            <class name="tests_DataProvider.GetTestsWithDataProvider"/>
+        </classes>
+    </test>
+    <test name="POST Tests with DataProvider">
+        <classes>
+            <class name="tests_DataProvider.PostTestsWithDataProvider"/>
         </classes>
     </test>
 </suite>
