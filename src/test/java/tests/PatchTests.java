@@ -5,8 +5,8 @@ import io.qameta.allure.Description;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.Story;
+import models.PatchRequest;
 import models.Post;
-import models.PutRequest;
 import org.testng.annotations.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -22,7 +22,7 @@ public class PatchTests {
 
         int postId = 1;
 
-        PutRequest request = new PutRequest();
+        PatchRequest request = new PatchRequest();
         request.setTitle("Поменяли только заголовок");
 
         Post response = TestClient.request()

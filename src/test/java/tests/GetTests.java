@@ -10,6 +10,7 @@ import org.testng.annotations.Test;
 
 import java.util.List;
 
+import static io.restassured.module.jsv.JsonSchemaValidator.matchesJsonSchemaInClasspath;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 
@@ -124,6 +125,32 @@ public class GetTests {
         assertThat(post.getBody())
                 .as("body не равен expectedBody")
                 .contains(expectedBody);
+    }
+
+    // ==================== JSON SCHEMA VALIDATION ====================
+
+    @Test
+    @Story("Проверка схемы ответа")
+    @Description("Проверяет, что структура одного поста соответствует схеме")
+    public void validateSinglePostSchemaTest() {
+        TestClient.request()
+                .when()
+                .get("/posts/1")
+                .then()
+                .statusCode(200)
+                .body(matchesJsonSchemaInClasspath("schemas/post-schema.json"));
+    }
+
+    @Test
+    @Story("Проверка схемы ответа")
+    @Description("Проверяет, что структура списка постов соответствует схеме")
+    public void validatePostsListSchemaTest() {
+        TestClient.request()
+                .when()
+                .get("/posts")
+                .then()
+                .statusCode(200)
+                .body(matchesJsonSchemaInClasspath("schemas/posts-list-schema.json"));
     }
 
     @Story("Негативный сценарий")
