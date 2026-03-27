@@ -11,18 +11,27 @@ import org.testng.annotations.Test;
 @Feature("DELETE запросы")
 public class DeleteTests {
 
+    @Test
     @Story("Удаление поста")
     @Description("DELETE удаляет пост, после чего GET возвращает 404")
-    @Test
     public void deletePostTest() {
 
         int postId = 1;
 
-        // JSONPlaceholder эмулирует удаление, возвращая 200
+        // Шаг 1: Удаляем пост
         TestClient.request()
                 .when()
                 .delete("/posts/" + postId)
                 .then()
                 .statusCode(200);  // В реальном API было бы 204 No Content
+
+        // Шаг 2: Проверяем, что пост действительно удалён
+        // ВНИМАНИЕ: JSONPlaceholder НЕ удаляет пост по-настоящему,
+        // поэтому этот шаг будет красным. В реальном API нужно его добавить.
+        // TestClient.request()
+        //         .when()
+        //         .get("/posts/" + postId)
+        //         .then()
+        //         .statusCode(404);
     }
 }
