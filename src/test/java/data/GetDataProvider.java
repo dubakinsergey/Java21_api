@@ -2,6 +2,10 @@ package data;
 
 import org.testng.annotations.DataProvider;
 
+/**
+ * DataProvider для GET-запросов.
+ * Валидные ID, невалидные ID и проверка наличия в списке.
+ */
 public class GetDataProvider {
 
     @DataProvider(name = "validPostIds")

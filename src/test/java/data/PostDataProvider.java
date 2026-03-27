@@ -2,6 +2,13 @@ package data;
 
 import org.testng.annotations.DataProvider;
 
+/**
+ * DataProvider для POST-запросов.
+ * <p>
+ * ВНИМАНИЕ: Используется учебное API JSONPlaceholder, которое НЕ ВАЛИДИРУЕТ данные.
+ * В реальном проекте ожидаемые статусы в boundaryPostData и negativePostData
+ * были бы другими (400 вместо 201).
+ */
 public class PostDataProvider {
 
     @DataProvider(name = "happyPathPostData")

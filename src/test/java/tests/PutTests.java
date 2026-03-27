@@ -48,4 +48,19 @@ public class PutTests {
                 .as("userId должен совпадать с отправленным")
                 .isEqualTo(request.getUserId());
     }
+
+    @Test
+    @Story("Негативные сценарии")
+    @Description("Проверяет, что PUT несуществующего поста возвращает ошибку")
+    public void updateNonExistingPostTest() {
+        int postId = 99999;
+        PutRequest request = new PutRequest(postId, "Тест", "Тест", 1);
+
+        TestClient.request()
+                .body(request)
+                .when()
+                .put("/posts/" + postId)
+                .then()
+                .statusCode(500);  // JSONPlaceholder баг: должен быть 404, но возвращает 500
+    }
 }
