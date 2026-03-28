@@ -1,37 +1,47 @@
 # Java21_api
 
-Проект автоматизированного тестирования REST API на Java 21 с использованием RestAssured, TestNG, Owner, Allure и Lombok.
+Проект автоматизированного тестирования REST API на Java 21 с использованием RestAssured, TestNG, Owner и Allure.
 
 ## 🚀 Стек технологий
 
-| Компонент | Инструмент |
-|-----------|------------|
-| **Язык** | Java 21 |
-| **Сборка** | Maven |
-| **Тестирование** | TestNG |
-| **HTTP-клиент** | RestAssured |
-| **Проверки** | AssertJ |
-| **Конфигурация** | Owner |
-| **Отчёты** | Allure |
-| **POJO** | Lombok |
-| **VCS** | Git + GitHub |
+- **Java 21**
+- **Maven** — сборка проекта
+- **RestAssured** — отправка HTTP-запросов
+- **TestNG** — запуск тестов
+- **AssertJ / Hamcrest** — проверки (assertions)
+- **Owner** — управление конфигурацией (URL, таймауты)
+- **Allure** — генерация отчётов
+- **Lombok** — сокращение кода в POJO
+- **Git / GitHub** — контроль версий
 
 ## 📁 Структура проекта
 src/test/java/
 ├── client/ # TestClient — обёртка над RestAssured
 ├── config/ # Owner-конфиги (чтение .properties)
-├── models/ # POJO с Lombok для запросов и ответов
-│ ├── Post.java # ответ (GET, POST, PUT, PATCH)
-│ ├── PostRequest.java # запрос (POST)
-│ └── PutRequest.java # запрос (PUT, PATCH)
-├── tests/ # Тесты, разбитые по HTTP-методам
-│ ├── GetTests.java # GET /posts, /posts/1, проверка полей, 404
-│ ├── PostTests.java # POST /posts (позитивные + негативные)
-│ ├── PutTests.java # PUT /posts/{id} — полное обновление
-│ ├── PatchTests.java # PATCH /posts/{id} — частичное обновление
-│ └── DeleteTests.java # DELETE /posts/{id} — удаление
+├── data/ # DataProvider для параметризации тестов
+│ ├── GetDataProvider.java
+│ ├── PostDataProvider.java
+│ └── PutPatchDeleteDataProvider.java
+├── models/ # POJO для запросов и ответов
+│ ├── Post.java
+│ ├── PostRequest.java
+│ ├── PutRequest.java
+│ ├── PatchRequest.java
+│ └── ...
+├── tests/ # Старые тесты (для совместимости)
+│ ├── GetTests.java
+│ ├── PostTests.java
+│ ├── PutTests.java
+│ ├── PatchTests.java
+│ └── DeleteTests.java
+├── tests_DataProvider/ # Новые параметризованные тесты
+│ ├── GetTestsWithDataProvider.java
+│ └── PostTestsWithDataProvider.java
 └── resources/
-└── config.properties # настройки (URL, таймауты)
+├── config.properties # настройки (URL, таймауты)
+└── schemas/ # JSON Schema для валидации ответов
+├── post-schema.json
+└── posts-list-schema.json
 
 
 ## ⚙️ Запуск тестов
@@ -40,40 +50,15 @@ src/test/java/
 
 ```bash
 mvn clean test
+Генерация и открытие Allure-отчёта
+После выполнения тестов:
 
-Запуск конкретного класса
-
-mvn clean test -Dtest=GetTests
-mvn clean test -Dtest=PostTests
-mvn clean test -Dtest=PutTests
-mvn clean test -Dtest=PatchTests
-mvn clean test -Dtest=DeleteTests
-
-Запуск конкретного теста
-
-mvn clean test -Dtest=GetTests#getSpecificPostTest
-
-📊 Allure отчёт
-
-Генерация и открытие отчёта
 # Сгенерировать отчёт и открыть в браузере
 allure serve target/allure-results
 
-Альтернативный способ
-# Сначала сгенерировать
+Альтернативный способ (сначала сгенерировать, потом открыть):
 allure generate target/allure-results --clean -o allure-report
-
-# Потом открыть
 allure open allure-report
-В отчёте:
-
-📈 Dashboard — общая статистика
-
-🧩 Behaviors — группировка по Epic/Feature/Story
-
-📋 Suites — структура по классам
-
-📊 Graphs — графики времени выполнения
 
 🔧 Конфигурация
 Настройки проекта находятся в файле:
@@ -82,73 +67,85 @@ src/test/resources/config.properties
 Пример содержимого:
 
 properties
+# Базовый URL API
 base.url=https://jsonplaceholder.typicode.com
+
+# Таймаут в миллисекундах
 timeout=5000
 
+
+📦 Основные зависимости
+Зависимость	Версия	Назначение
+RestAssured	5.5.0	HTTP-клиент для API
+TestNG	7.10.2	Фреймворк для тестирования
+AssertJ	3.26.3	Читаемые проверки
+Jackson	2.18.0	Работа с JSON
+Lombok	1.18.36	Сокращение кода в POJO
+Owner	1.0.12	Управление конфигами
+Allure	2.29.0	Генерация отчётов
+JSON Schema Validator	5.5.0	Валидация структуры ответов
+
 🧪 Что покрыто тестами
-Метод	Эндпоинт	Что проверяется
-GET	/posts	Непустой массив, структура, поля не null
-GET	/posts/1	Типы данных, конкретные значения
-GET	/posts/99999	404 Not Found
-POST	/posts	Создание поста, длинный заголовок, Content-Type
-POST	/posts	Негативные сценарии (пустой title, без body, лишние поля)
-PUT	/posts/1	Полное обновление всех полей
-PATCH	/posts/1	Частичное обновление (только заголовок)
-DELETE	/posts/1	Удаление поста
+GET /posts
+Получение списка постов
 
-Особенность: Тесты адаптированы под реальное поведение JSONPlaceholder:
+Получение поста по ID
 
-Негативные POST-тесты ожидают 201 (API не валидирует)
+Проверка структуры и типов данных
 
-PUT и PATCH возвращают обновлённые данные
+Негативные сценарии (404)
 
-DELETE возвращает 200, но реального удаления нет
+JSON Schema валидация
 
-📦 POJO с Lombok
-PostRequest (для POST-запросов)
-java
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
-public class PostRequest {
-    private String title;
-    private String body;
-    private int userId;
-}
-PutRequest (для PUT/PATCH-запросов)
-java
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
-public class PutRequest {
-    private int id;
-    private String title;
-    private String body;
-    private int userId;
-}
-Post (для ответов)
-java
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
-public class Post {
-    private int id;
-    private String title;
-    private String body;
-    private int userId;
-}
+POST /posts
+Создание поста с валидными данными (happy path)
 
-✅ Преимущества подхода
+Граничные значения (пустые строки, null, длинные строки)
 
-POJO + Lombok — типизированные запросы/ответы, минимум кода, автодополнение в IDE
+Негативные сценарии (пустой заголовок, неверные типы)
 
-TestClient — единая точка входа, убрано дублирование
+PUT /posts/{id}
+Полное обновление поста
 
-Owner — вынос конфигов, поддержка окружений
+Негативные сценарии (несуществующий пост)
 
-Allure — красивые отчёты с группировкой
+PATCH /posts/{id}
+Частичное обновление поста
 
-Разделение по классам — чистая структура, удобный запуск
+DELETE /posts/{id}
+Удаление поста
+
+Все тесты параметризованы через DataProvider и используют единый TestClient.
+
+📊 Allure отчёт
+После запуска тестов отчёт доступен в браузере:
+
+bash
+allure serve target/allure-results
+В отчёте представлены:
+
+Общая статистика прохождения тестов
+
+Пошаговое выполнение тестов
+
+Вложения (запросы, ответы, описания сценариев)
+
+Графики времени выполнения
+
+🧪 JSON Schema валидация
+Проект использует JSON Schema для проверки структуры ответов:
+
+post-schema.json — проверка одного поста
+
+posts-list-schema.json — проверка массива постов
+
+Схемы обеспечивают:
+
+Наличие всех обязательных полей
+
+Корректные типы данных
+
+Отсутствие лишних полей
 
 👤 Автор
 Сергей Дубакин
