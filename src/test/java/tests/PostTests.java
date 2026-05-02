@@ -181,4 +181,36 @@ public class PostTests {
                 .then()
                 .statusCode(201);  // JSONPlaceholder игнорирует лишние поля
     }
+
+    @Test
+    public void builderTest() {
+
+        PostRequest request = PostRequest.builder()
+                .title("Builder тест")
+                .body("Создано через билдер")
+                .userId(42)
+                .build();
+
+        assertThat(request.getTitle())
+                .as("Заголовок должен быть 'Builder тест'")
+                .isEqualTo("Builder тест");
+
+        assertThat(request.getBody())
+                .as("Тело должно быть 'Создано через билдер'")
+                .isEqualTo("Создано через билдер");
+
+        assertThat(request.getUserId())
+                .as("userId должен быть 42")
+                .isEqualTo(42);
+    }
+
+    @Test(expectedExceptions = IllegalArgumentException.class)
+    public void builderValidationTest() {
+
+        PostRequest.builder()
+                .title("")  // пустой заголовок — триггерит валидацию
+                .body("Тело")
+                .userId(1)
+                .build();
+    }
 }
