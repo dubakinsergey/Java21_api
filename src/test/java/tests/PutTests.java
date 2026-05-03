@@ -63,4 +63,15 @@ public class PutTests {
                 .then()
                 .statusCode(500);  // JSONPlaceholder баг: должен быть 404, но возвращает 500
     }
+
+    @Test(expectedExceptions = IllegalArgumentException.class)
+    public void putRequestBuilderValidationTest() {
+
+        PutRequest.builder()
+                .title("")  // пустой заголовок — должно упасть
+                .body("Тело")
+                .userId(1)
+                .id(1)
+                .build();
+    }
 }
