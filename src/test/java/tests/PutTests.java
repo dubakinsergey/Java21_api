@@ -74,4 +74,30 @@ public class PutTests {
                 .id(1)
                 .build();
     }
+
+    @Test
+    public void putRequestBuilderTest() {
+        PutRequest request = PutRequest.builder()
+                .id(1)
+                .title("Builder PUT тест")
+                .body("Тело PUT запроса")
+                .userId(10)
+                .build();
+
+        assertThat(request.getId())
+                .as("id должен быть 1")
+                .isEqualTo(1);
+
+        assertThat(request.getTitle())
+                .as("Заголовок должен быть 'Builder PUT тест'")
+                .isEqualTo("Builder PUT тест");
+
+        assertThat(request.getBody())
+                .as("Тело должно быть 'Тело PUT запроса'")
+                .isEqualTo("Тело PUT запроса");
+
+        assertThat(request.getUserId())
+                .as("userId должен быть 10")
+                .isEqualTo(10);
+    }
 }

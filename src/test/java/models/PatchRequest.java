@@ -20,4 +20,36 @@ public class PatchRequest {
 
     @JsonProperty("userId")
     private Integer userId;
+
+    // ========== BUILDER ==========
+    public static PatchRequestBuilder builder() {
+        return new PatchRequestBuilder();
+    }
+
+    public static class PatchRequestBuilder {
+
+        private String title;
+        private String body;
+        private Integer userId;
+
+        public PatchRequestBuilder title(String title) {
+            this.title = title;
+            return this;
+        }
+
+        public PatchRequestBuilder body(String body) {
+            this.body = body;
+            return this;
+        }
+
+        public PatchRequestBuilder userId(Integer userId) {
+            this.userId = userId;
+            return this;
+        }
+
+        public PatchRequest build() {
+
+            return new PatchRequest(this.title, this.body, this.userId);
+        }
+    }
 }
