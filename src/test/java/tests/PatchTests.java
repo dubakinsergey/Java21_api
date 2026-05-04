@@ -38,4 +38,24 @@ public class PatchTests {
                 .as("title должен измениться")
                 .isEqualTo(request.getTitle());
     }
+
+    @Test
+    public void patchRequestBuilderTest() {
+
+        PatchRequest request = PatchRequest.builder()
+                .title("Новый заголовок")
+                .build();
+
+        assertThat(request.getTitle())
+                .as("Заголовок должен быть 'Новый заголовок'")
+                .isEqualTo("Новый заголовок");
+
+        assertThat(request.getBody())
+                .as("Body не должен быть передан")
+                .isNull();
+
+        assertThat(request.getUserId())
+                .as("UserId не должен быть передан")
+                .isNull();
+    }
 }
