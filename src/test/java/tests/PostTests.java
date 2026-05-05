@@ -1,6 +1,7 @@
 package tests;
 
 import client.TestClient;
+import factory.PostFactory;
 import io.qameta.allure.Description;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
@@ -212,5 +213,46 @@ public class PostTests {
                 .body("Тело")
                 .userId(1)
                 .build();
+    }
+
+    @Test
+    public void factoryValidPostTest() {
+
+        PostRequest request = PostFactory.validPost();
+
+        assertThat(request.getTitle())
+                .as("Заголовок должен быть 'Обычный заголовок'")
+                .isEqualTo("Обычный заголовок");
+
+        assertThat(request.getBody())
+                .as("Тело должно быть 'Обычное тело поста'")
+                .isEqualTo("Обычное тело поста");
+
+        assertThat(request.getUserId())
+                .as("userId должен быть 1")
+                .isEqualTo(1);
+    }
+
+    @Test(expectedExceptions = IllegalArgumentException.class)
+    public void postWithEmptyTitleTest() {
+
+        PostRequest request = PostFactory.postWithEmptyTitle();
+    }
+
+    @Test
+    public void postWithLongTitleTest() {
+        PostRequest request = PostFactory.postWithLongTitle();
+
+        assertThat(request.getTitle())
+                .as("Длина заголовка должна быть 1000")
+                .hasSize(1000);
+
+        assertThat(request.getBody())
+                .as("Тело должно быть 'Тело с длинным заголовком'")
+                .isEqualTo("Тело с длинным заголовком");
+
+        assertThat(request.getUserId())
+                .as("userId должен быть 3")
+                .isEqualTo(3);
     }
 }
