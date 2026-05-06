@@ -25,7 +25,11 @@ public class PostTests {
     @Test
     public void createPostTest() {
 
-        PostRequest request = new PostRequest("Хасл учит POST", "Теперь я умею создавать данные", 1);
+        PostRequest request = PostRequest.builder()
+                .title("Хасл учит POST")
+                .body("Теперь я умею создавать данные")
+                .userId(1)
+                .build();
 
         Post response = TestClient.request()
                 .body(request)
