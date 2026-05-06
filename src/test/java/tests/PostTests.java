@@ -59,7 +59,12 @@ public class PostTests {
     public void createPostWithLongTitleTest() {
 
         String longTitle = "a".repeat(1000);
-        PostRequest request = new PostRequest(longTitle, "Нормальное тело", 1);
+        PostRequest request = PostRequest.builder()
+                .title(longTitle)
+                .body("Нормальное тело")
+                .userId(1)
+                .build();
+
 
         Post response = TestClient.request()
                 .body(request)
