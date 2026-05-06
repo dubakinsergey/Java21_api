@@ -25,7 +25,11 @@ public class PostTests {
     @Test
     public void createPostTest() {
 
-        PostRequest request = new PostRequest("Хасл учит POST", "Теперь я умею создавать данные", 1);
+        PostRequest request = PostRequest.builder()
+                .title("Хасл учит POST")
+                .body("Теперь я умею создавать данные")
+                .userId(1)
+                .build();
 
         Post response = TestClient.request()
                 .body(request)
@@ -97,7 +101,11 @@ public class PostTests {
     @Test
     public void createPostCheckContentTypeTest() {
 
-        PostRequest request = new PostRequest("Проверка типа", "Проверяем, что ответ — JSON", 1);
+        PostRequest request = PostRequest.builder()
+                .title("Проверка типа")
+                .body("Проверяем, что ответ — JSON")
+                .userId(1)
+                .build();
 
         Post response = TestClient.request()
                 .body(request)
@@ -119,7 +127,11 @@ public class PostTests {
     @Test
     public void createPostWithEmptyTitleTest() {
 
-        PostRequest request = new PostRequest("", "Тело поста", 1);
+        PostRequest request = PostRequest.builder()
+                .title("")
+                .body("Тело поста")
+                .userId(1)
+                .build();
 
         // JSONPlaceholder не валидирует, поэтому ожидаем 201
         // В реальном API было бы 400
