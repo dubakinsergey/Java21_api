@@ -101,7 +101,11 @@ public class PostTests {
     @Test
     public void createPostCheckContentTypeTest() {
 
-        PostRequest request = new PostRequest("Проверка типа", "Проверяем, что ответ — JSON", 1);
+        PostRequest request = PostRequest.builder()
+                .title("Проверка типа")
+                .body("Проверяем, что ответ — JSON")
+                .userId(1)
+                .build();
 
         Post response = TestClient.request()
                 .body(request)
