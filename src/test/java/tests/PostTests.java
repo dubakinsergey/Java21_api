@@ -127,7 +127,11 @@ public class PostTests {
     @Test
     public void createPostWithEmptyTitleTest() {
 
-        PostRequest request = new PostRequest("", "Тело поста", 1);
+        PostRequest request = PostRequest.builder()
+                .title("")
+                .body("Тело поста")
+                .userId(1)
+                .build();
 
         // JSONPlaceholder не валидирует, поэтому ожидаем 201
         // В реальном API было бы 400
