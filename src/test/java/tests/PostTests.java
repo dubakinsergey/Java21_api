@@ -169,8 +169,11 @@ public class PostTests {
     @Test
     public void createPostWithoutBodyTest() {
 
-        // Создаём запрос без body (null)
-        PostRequest request = new PostRequest("Нет тела", null, 1);
+        PostRequest request = PostRequest.builder()
+                .title("Нет тела")
+                .body(null)
+                .userId(1)
+                .build();
 
         TestClient.request()
                 .body(request)

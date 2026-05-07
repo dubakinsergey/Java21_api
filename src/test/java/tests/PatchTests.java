@@ -22,8 +22,9 @@ public class PatchTests {
 
         int postId = 1;
 
-        PatchRequest request = new PatchRequest();
-        request.setTitle("Поменяли только заголовок");
+        PatchRequest request = PatchRequest.builder()
+                .title("Поменяли только заголовок")
+                .build();
 
         Post response = TestClient.request()
                 .body(request)
