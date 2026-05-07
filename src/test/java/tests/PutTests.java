@@ -21,7 +21,13 @@ public class PutTests {
     public void updatePostWithPutTest() {
 
         int postId = 1;
-        PutRequest request = new PutRequest(postId, "Обновлённый заголовок", "Обновлённое тело поста", 777);
+
+        PutRequest request = PutRequest.builder()
+                .id(postId)
+                .title("Обновлённый заголовок")
+                .body("Обновлённое тело поста")
+                .userId(777)
+                .build();
 
         Post response = TestClient.request()
                 .body(request)
@@ -53,8 +59,14 @@ public class PutTests {
     @Story("Негативные сценарии")
     @Description("Проверяет, что PUT несуществующего поста возвращает ошибку")
     public void updateNonExistingPostTest() {
+
         int postId = 99999;
-        PutRequest request = new PutRequest(postId, "Тест", "Тест", 1);
+        PutRequest request = PutRequest.builder()
+                .id(postId)
+                .title("Тест")
+                .body("Тест")
+                .userId(1)
+                .build();
 
         TestClient.request()
                 .body(request)
@@ -77,6 +89,7 @@ public class PutTests {
 
     @Test
     public void putRequestBuilderTest() {
+
         PutRequest request = PutRequest.builder()
                 .id(1)
                 .title("Builder PUT тест")

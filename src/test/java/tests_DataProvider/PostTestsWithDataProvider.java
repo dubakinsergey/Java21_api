@@ -22,7 +22,11 @@ public class PostTestsWithDataProvider {
 
         Allure.addAttachment("Сценарий", description);
 
-        PostRequest request = new PostRequest(title, body, userId);
+        PostRequest request = PostRequest.builder()
+                .title(title)
+                .body(body)
+                .userId(userId)
+                .build();
 
         Post response = TestClient.request()
                 .body(request)
@@ -59,7 +63,11 @@ public class PostTestsWithDataProvider {
 
         Allure.addAttachment("Граничный сценарий", description);
 
-        PostRequest request = new PostRequest(title, body, userId);
+        PostRequest request = PostRequest.builder()
+                .title(title)
+                .body(body)
+                .userId(userId)
+                .build();
 
         Post response = TestClient.request()
                 .body(request)
@@ -96,7 +104,11 @@ public class PostTestsWithDataProvider {
 
         Allure.addAttachment("Негативный сценарий", description);
 
-        PostRequest request = new PostRequest(title, body, userId);
+        PostRequest request = PostRequest.builder()
+                .title(title)
+                .body(body)
+                .userId(userId)
+                .build();
 
         TestClient.request()
                 .body(request)
