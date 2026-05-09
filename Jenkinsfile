@@ -15,7 +15,14 @@ pipeline {
 
         stage('Test') {
             steps {
-                sh 'mvn clean test'
+                script {
+                    try {
+                        sh 'mvn clean test'
+                    } catch (Exception e) {
+                        echo 'Тесты упали, но Allure отчёт всё равно будет сгенерирован.'
+                        currentBuild.result = 'UNSTABLE'
+                    }
+                }
             }
         }
 
@@ -39,6 +46,9 @@ pipeline {
         }
         failure {
             echo '❌ Тесты упали!'
+        }
+        unstable {
+            echo '⚠️ Тесты упали, но отчёт сгенерирован. Смотри Allure Report.'
         }
     }
 }
